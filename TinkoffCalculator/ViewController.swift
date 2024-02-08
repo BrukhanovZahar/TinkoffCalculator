@@ -97,6 +97,8 @@ class ViewController: UIViewController {
             let result = try calculate()
             
             label.text = numberFormatter.string(from: NSNumber(value: result))
+            wasCalculation = true
+            lastResult = result
         } catch {
             label.text = "Ошибка"
         }
@@ -109,6 +111,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var label: UILabel!
     
     var calculationHistory: [CalculationHistoryItem] = []
+    var wasCalculation: Bool = false
+    var lastResult: Double = 0.0
     
     lazy var numberFormatter: NumberFormatter = {
         let numberFormatter = NumberFormatter()
@@ -122,9 +126,24 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        self.title = "Калькулятор"
         
         resetLabelText()
+    }
+    
+    @IBAction func showCalculationsList(_ sender: Any) {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let calculationsListVC = sb.instantiateViewController(identifier: "CalculationsListViewController")
+        
+        if let vc = calculationsListVC as? CalculationsListViewController {
+            if wasCalculation {
+                vc.result = numberFormatter.string(from: NSNumber(value: lastResult))
+            } else {
+                vc.result = "NoData"
+            }
+        }
+        
+        navigationController?.pushViewController(calculationsListVC, animated: true)
     }
     
     func calculate() throws -> Double {

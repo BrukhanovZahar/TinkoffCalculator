@@ -97,6 +97,8 @@ class ViewController: UIViewController {
             let result = try calculate()
             
             label.text = numberFormatter.string(from: NSNumber(value: result))
+            let newCalculation = Calculation(expression: calculationHistory, result: result, date: NSDate() as Date)
+            calculations.append(newCalculation)
             wasCalculation = true
             lastResult = result
         } catch {
@@ -108,9 +110,11 @@ class ViewController: UIViewController {
     }
     
     
+    @IBOutlet weak var historyButton: UIButton!
     @IBOutlet weak var label: UILabel!
     
     var calculationHistory: [CalculationHistoryItem] = []
+    var calculations: [Calculation] = []
     var wasCalculation: Bool = false
     var lastResult: Double = 0.0
     
@@ -127,7 +131,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Калькулятор"
-        
+        historyButton.accessibilityIdentifier = "historyButton"
         resetLabelText()
     }
     
@@ -136,11 +140,12 @@ class ViewController: UIViewController {
         let calculationsListVC = sb.instantiateViewController(identifier: "CalculationsListViewController")
         
         if let vc = calculationsListVC as? CalculationsListViewController {
-            if wasCalculation {
-                vc.result = numberFormatter.string(from: NSNumber(value: lastResult))
-            } else {
-                vc.result = "NoData"
-            }
+            vc.calculations = calculations
+//            if wasCalculation {
+//                vc.result = numberFormatter.string(from: NSNumber(value: lastResult))
+//            } else {
+//                vc.result = "NoData"
+//            }
         }
         
         navigationController?.pushViewController(calculationsListVC, animated: true)

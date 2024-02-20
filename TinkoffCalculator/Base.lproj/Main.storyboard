@@ -311,6 +311,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="4hD-3U-wsx"/>
                     <connections>
+                        <outlet property="historyButton" destination="PsC-cm-gpN" id="tPU-sS-ReM"/>
                         <outlet property="label" destination="HLQ-wW-zg7" id="XH8-4B-ZhB"/>
                     </connections>
                 </viewController>
@@ -326,22 +327,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XuH-oo-KbZ">
-                                <rect key="frame" x="175.66666666666666" y="415.66666666666669" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Ej1-6E-KQZ">
+                                <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="OR7-JI-WH4"/>
                         <color key="backgroundColor" systemColor="systemGray2Color"/>
                         <constraints>
-                            <constraint firstItem="XuH-oo-KbZ" firstAttribute="centerY" secondItem="1fe-Ou-sDc" secondAttribute="centerY" id="0Yh-Nu-GFU"/>
-                            <constraint firstItem="XuH-oo-KbZ" firstAttribute="centerX" secondItem="1fe-Ou-sDc" secondAttribute="centerX" id="8mM-vL-p9o"/>
+                            <constraint firstItem="Ej1-6E-KQZ" firstAttribute="top" secondItem="OR7-JI-WH4" secondAttribute="top" id="7Va-LO-c1e"/>
+                            <constraint firstItem="Ej1-6E-KQZ" firstAttribute="top" secondItem="OR7-JI-WH4" secondAttribute="top" id="AO2-pv-Vh1"/>
+                            <constraint firstItem="OR7-JI-WH4" firstAttribute="trailing" secondItem="Ej1-6E-KQZ" secondAttribute="trailing" id="NPg-eP-S1Y"/>
+                            <constraint firstItem="OR7-JI-WH4" firstAttribute="bottom" secondItem="Ej1-6E-KQZ" secondAttribute="bottom" id="l12-Sk-LDg"/>
+                            <constraint firstItem="OR7-JI-WH4" firstAttribute="trailing" secondItem="Ej1-6E-KQZ" secondAttribute="trailing" id="xN8-2g-8VV"/>
+                            <constraint firstItem="Ej1-6E-KQZ" firstAttribute="leading" secondItem="OR7-JI-WH4" secondAttribute="leading" id="xQr-W3-XNH"/>
+                            <constraint firstItem="Ej1-6E-KQZ" firstAttribute="leading" secondItem="OR7-JI-WH4" secondAttribute="leading" id="ybB-iR-7NM"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="calculationLabel" destination="XuH-oo-KbZ" id="Vy1-dI-is1"/>
+                        <outlet property="tableView" destination="Ej1-6E-KQZ" id="r6w-uP-g3e"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zmG-u8-Ibl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -376,10 +380,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray2Color">
-            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

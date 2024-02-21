@@ -97,7 +97,9 @@ class ViewController: UIViewController {
             let result = try calculate()
             
             label.text = numberFormatter.string(from: NSNumber(value: result))
-            calculations.append((expression: calculationHistory, result: result, date: NSDate() as Date))
+            let newCalculation = Calculation(expression: calculationHistory, result: result, date: NSDate() as Date)
+            calculations.append(newCalculation)
+            calculationHistoryStorage.setHistory(calculation: calculations)
             wasCalculation = true
             lastResult = result
         } catch {
@@ -113,7 +115,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var label: UILabel!
     
     var calculationHistory: [CalculationHistoryItem] = []
-    var calculations: [(expression: [CalculationHistoryItem], result: Double, date: Date)] = []
+    var calculations: [Calculation] = []
+    let calculationHistoryStorage = CalculationHistoryStorage()
     var wasCalculation: Bool = false
     var lastResult: Double = 0.0
     
@@ -132,6 +135,7 @@ class ViewController: UIViewController {
         self.title = "Калькулятор"
         historyButton.accessibilityIdentifier = "historyButton"
         resetLabelText()
+        calculations = calculationHistoryStorage.loadHistory()
     }
     
     @IBAction func showCalculationsList(_ sender: Any) {

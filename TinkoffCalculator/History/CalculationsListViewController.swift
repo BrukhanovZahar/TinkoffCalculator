@@ -7,15 +7,9 @@
 
 import UIKit
 
-struct Calculation {
-    let expression: [CalculationHistoryItem]
-    let result: Double
-    let date: Date
-}
-
 class CalculationsListViewController: UIViewController {
     
-    var calculations: [Calculation] = []
+    var calculations: [(expression: [CalculationHistoryItem], result: Double, date: Date)] = []
     @IBOutlet weak var tableView: UITableView!
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -91,23 +85,10 @@ extension CalculationsListViewController: UITableViewDataSource {
         return cell
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-            let headerView = UIView.init(frame: CGRect.init(x: 0, y: 0, width: tableView.frame.width, height: 50))
-            headerView.backgroundColor = .systemGray5
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
             
-            let label = UILabel()
-            label.frame = CGRect.init(x: 5, y: 0, width: headerView.frame.width-10, height: headerView.frame.height-20)
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd.MM.yyyy"
-            
-            label.text = formatter.string(from: calculations[section].date as Date)
-            
-            label.font = .systemFont(ofSize: 16)
-            label.textColor = .black
-            
-            headerView.addSubview(label)
-            
-            return headerView
+        return formatter.string(from: calculations[section].date as Date)
     }
 }

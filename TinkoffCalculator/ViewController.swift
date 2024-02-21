@@ -97,8 +97,7 @@ class ViewController: UIViewController {
             let result = try calculate()
             
             label.text = numberFormatter.string(from: NSNumber(value: result))
-            let newCalculation = Calculation(expression: calculationHistory, result: result, date: NSDate() as Date)
-            calculations.append(newCalculation)
+            calculations.append((expression: calculationHistory, result: result, date: NSDate() as Date))
             wasCalculation = true
             lastResult = result
         } catch {
@@ -114,7 +113,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var label: UILabel!
     
     var calculationHistory: [CalculationHistoryItem] = []
-    var calculations: [Calculation] = []
+    var calculations: [(expression: [CalculationHistoryItem], result: Double, date: Date)] = []
     var wasCalculation: Bool = false
     var lastResult: Double = 0.0
     

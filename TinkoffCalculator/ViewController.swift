@@ -40,7 +40,28 @@ enum CalculationHistoryItem {
     case operation(Operation)
 }
 
-class ViewController: UIViewController {
+protocol LongPressViewProtocol {
+    var shared: UIView { get }
+    
+    func startAnimation()
+    func stopAnimation()
+}
+
+class ViewController: UIViewController, LongPressViewProtocol {
+    
+    var shared: UIView = UIView()
+    var animator: UIViewPropertyAnimator?
+    
+    private let alertView: AlertView = {
+        let screenBounds = UIScreen.main.bounds
+        let alertHeight: CGFloat = 100
+        let alertWidth: CGFloat = screenBounds.width - 40
+        let x: CGFloat = screenBounds.width / 2 - alertWidth / 2
+        let y: CGFloat = screenBounds.height / 2 - alertWidth / 2
+        let alertFrame = CGRect(x: x, y: y, width: alertWidth, height: alertHeight)
+        let alertView = AlertView(frame: alertFrame)
+        return alertView
+    }()
     
     @IBAction func buttonPressed(_ sender: UIButton) {
         guard let buttonText = sender.currentTitle else { return }
@@ -60,6 +81,12 @@ class ViewController: UIViewController {
         } else {
             label.text?.append(buttonText)
         }
+        
+        if label.text == "3,14159" {
+            animateAlert()
+        }
+        
+        sender.animateTap()
     }
     
     @IBAction func operationButtonPressed(_ sender: UIButton) {
@@ -104,12 +131,71 @@ class ViewController: UIViewController {
             lastResult = result
         } catch {
             label.text = "Ошибка"
+            label.shake()
         }
         
         
         calculationHistory.removeAll()
     }
     
+    func animateAlert() {
+            if !view.contains(alertView) {
+                alertView.alpha = 0
+                alertView.center = view.center
+                alertView.tintColor = UIColor.white
+                
+                view.addSubview(alertView)
+            }
+            
+            alertView.transform = CGAffineTransform(scaleX: 1, y: 1)
+            alertView.layer.cornerRadius = 30
+            alertView.clipsToBounds = true
+            
+            UIView.animateKeyframes(withDuration: 2.0, delay: 0.5) {
+                UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5) {
+                    self.alertView.alpha = 1
+                }
+                
+                UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5) {
+                    var newCenter = self.label.center
+                    newCenter.y -= self.alertView.bounds.height
+                    self.alertView.center = newCenter
+                }
+            }
+        }
+    
+    @objc func handleLongPress(_ sender: UILongPressGestureRecognizer) {
+              if sender.state == .began {
+                  startAnimation()
+              } else if sender.state == .ended {
+                  stopAnimation()
+              }
+          }
+        
+    func startAnimation() {
+        shared = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        shared.backgroundColor = .systemOrange
+        shared.center = view.center
+        
+        let circlePath = UIBezierPath(ovalIn: shared.bounds)
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = circlePath.cgPath
+        shared.layer.mask = shapeLayer
+        
+        view.addSubview(shared)
+        
+        animator = UIViewPropertyAnimator(duration: 2.0, curve: .easeIn) {
+            self.shared.transform = CGAffineTransform(scaleX: 4.0, y: 4.0)
+        }
+        
+        animator?.startAnimation()
+    }
+    
+    func stopAnimation() {
+        animator?.stopAnimation(true)
+        animator = nil
+        shared.removeFromSuperview()
+    }
     
     @IBOutlet weak var historyButton: UIButton!
     @IBOutlet weak var label: UILabel!
@@ -136,6 +222,20 @@ class ViewController: UIViewController {
         historyButton.accessibilityIdentifier = "historyButton"
         resetLabelText()
         calculations = calculationHistoryStorage.loadHistory()
+        
+        view.addSubview(alertView)
+        alertView.alpha = 0
+        alertView.alertText = "Вы нашли пасхалку!"
+        
+        view.subviews.forEach {
+            if type(of: $0) == UIButton.self {
+                $0.layer.cornerRadius = 15
+            }
+        }
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        longPressGesture.minimumPressDuration = 1.0
+        view.addGestureRecognizer(longPressGesture)
     }
     
     @IBAction func showCalculationsList(_ sender: Any) {
@@ -176,3 +276,35 @@ class ViewController: UIViewController {
     }
 }
 
+extension UILabel {
+    
+    func shake() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.05
+        animation.repeatCount = 5
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: center.x - 5, y: center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: center.x + 5, y: center.y))
+        
+        layer.add(animation, forKey: "position")
+    }
+}
+
+extension UIButton {
+    
+    func animateTap() {
+        let scaleAnimation = CAKeyframeAnimation(keyPath: "transform.scale")
+        scaleAnimation.values = [1, 0.9, 1]
+        scaleAnimation.keyTimes = [0, 0.2, 1]
+        
+        let opacityAnimation = CAKeyframeAnimation(keyPath: "opasity")
+        opacityAnimation.values = [0.4, 0.8, 1]
+        opacityAnimation.keyTimes = [0, 0.2, 1]
+        
+        let animationGroup = CAAnimationGroup()
+        animationGroup.duration = 1.5
+        animationGroup.animations = [scaleAnimation, opacityAnimation]
+        
+        layer.add(animationGroup, forKey: "groupAnimation")
+    }
+}

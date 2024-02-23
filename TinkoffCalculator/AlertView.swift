@@ -34,7 +34,7 @@ class AlertView: UIView {
     
     private func setupUI() {
         addSubview(label)
-        backgroundColor = .systemGreen
+        backgroundColor = .red
         
         let tap = UITapGestureRecognizer()
         tap.addTarget(self, action: #selector(hide))

@@ -82,7 +82,7 @@ class ViewController: UIViewController, LongPressViewProtocol {
             label.text?.append(buttonText)
         }
         
-        if label.text == "3,14159" {
+        if label.text == "3,141592" {
             animateAlert()
         }
         
@@ -225,7 +225,7 @@ class ViewController: UIViewController, LongPressViewProtocol {
         
         view.addSubview(alertView)
         alertView.alpha = 0
-        alertView.alertText = "Вы нашли пасхалку!"
+        alertView.alertText = "You have found the Easter Egg!"
         
         view.subviews.forEach {
             if type(of: $0) == UIButton.self {
